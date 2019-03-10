@@ -13,3 +13,9 @@ body {
     background: white;
     text-align: center;
 }
+
+.answer-button {
+    display: block;
+    margin: auto;
+    margin-bottom: 5px;
+}
