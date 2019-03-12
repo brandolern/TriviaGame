@@ -22,4 +22,11 @@ body {
 
 .score {}
 
+.gif {
+    height: 200px;
+    width: 300px;
+}
+
+.gif-text {}
+
 #reset-button {}

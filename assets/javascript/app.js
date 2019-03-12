@@ -35,31 +35,123 @@ $(document).ready(function () {
                 } else {
 
                     randomNumber = Math.floor(Math.random() * this.questions.length);
-
                 }
             }
         },
 
-        counter: 50,
+        timer: {
+            counter: 10,
+            intervalId: 0,
 
-        decrement: function () {
-            this.counter--;
+            decrement: function () {
+
+                $("#time").text(trivia.timer.counter);
+                trivia.timer.counter--;
+
+                if (trivia.timer.counter < 0) {
+
+                    clearInterval(trivia.timer.intervalId);
+                    trivia.score.unanswered++;
+                    trivia.gifs.unansweredGif();
+                    $("#answers").empty();
+                    if (trivia.questionsAsked.length === trivia.questions.length) {
+
+                        clearInterval(trivia.timer.intervalId);
+
+                        setTimeout(function () {
+                            trivia.gifs.removeGif();
+                            trivia.finished.printScore();
+                            trivia.finished.resetButton();
+
+                        }, 4000);
+                        return true;
+                    }
+
+                    setTimeout(function () {
+
+                        trivia.gifs.removeGif();
+
+                        $("#time").empty();
+                        $("#question").empty();
+
+
+                        trivia.nextQuestion(trivia.randomQuestion());
+
+                    }, 4000);
+
+
+
+                }
+            },
+            runTimer: function () {
+                clearInterval(trivia.timer.intervalId);
+                this.counter = 10;
+                $("#time").text(trivia.timer.counter);
+
+                this.intervalId = setInterval(this.decrement, 1000);
+            },
+
+        },
+
+        gifs: {
+            correctGif: function () {
+
+                var gif = $("<img>");
+                gif.addClass("gif");
+                gif.attr("src", "assets/images/giphy.gif");
+                $(".gif").attr("alt", "That's correct!");
+                $("#gif").append(gif);
+
+                var gifText = $("<span>");
+                gifText.html("<br>" + "That's correct!");
+                gifText.addClass("gif-text");
+                $("#gif").append(gifText);
+            },
+
+            incorrectGif: function () {
+
+                var gif = $("<img>");
+                gif.addClass("gif");
+                gif.attr("src", "assets/images/giphy1.gif");
+                $(".gif").attr("alt", "That's incorrect");
+                $("#gif").append(gif);
+
+                var gifText = $("<span>");
+                gifText.html("<br>" + "Sorry, that's incorrect");
+                gifText.addClass("gif-text");
+                $("#gif").append(gifText);
+            },
+
+            unansweredGif: function () {
+                var gif = $("<img>");
+                gif.addClass("gif");
+                gif.attr("src", "assets/images/giphy2.gif");
+                $(".gif").attr("alt", "You ran out of time");
+                $("#gif").append(gif);
+
+                var gifText = $("<span>");
+                gifText.html("<br>" + "Sorry, you ran out of time!");
+                gifText.addClass("gif-text");
+                $("#gif").append(gifText);
+            },
+
+            removeGif: function () {
+                $("#gif").empty();
+            }
         },
 
         score: {
             correct: 0,
-            incorrect: 0
+            incorrect: 0,
+            unanswered: 0
         },
 
         nextQuestion: function (n) {
 
+            this.timer.runTimer();
             this.currentQuestion = n;
 
-            var intervalId = setInterval(this.decrement(), 1000);
-
-            $("#time").text(this.counter);
-
-            $("#question").text(this.questions[n]);
+            $("#question").text(`${this.questionsAsked.length} . ${this.questions[n]}`);
 
             for (i = 0; i < 4; i++) {
 
@@ -74,10 +166,13 @@ $(document).ready(function () {
         finished: {
 
             printScore: function () {
-
+                $("#time").empty();
+                $("#question").empty();
+                $("#answers").empty();
+                $("#gif").empty();
                 var scoreCont = $("<p>");
                 scoreCont.attr("id", "score");
-                scoreCont.html(`Correct: ${trivia.score.correct} <br> Incorrect: ${trivia.score.incorrect}`);
+                scoreCont.html(`Correct: ${trivia.score.correct} <br> Incorrect: ${trivia.score.incorrect} <br> Unanswered: ${trivia.score.unanswered}`);
                 $("#game").append(scoreCont);
             },
 
@@ -87,12 +182,11 @@ $(document).ready(function () {
                 resetButton.attr("id", "reset-button");
                 resetButton.text("Click here to try again!");
                 $("#game").append(resetButton);
-
             }
-
         }
-    }
+    };
 
+    //On click function for start button
     $("#start").on("click", function () {
 
         $(this).remove();
@@ -100,6 +194,7 @@ $(document).ready(function () {
 
     });
 
+    //On click function for answer buttons
     $(document).on("click", ".answer-button", function () {
 
         var answer = ($(this).attr("data-value"));
@@ -107,45 +202,81 @@ $(document).ready(function () {
         if (answer === trivia.answers[trivia.currentQuestion][4]) {
 
             trivia.score.correct++;
-            $("#time").empty();
-            $("#question").empty();
-            $("#answers").empty();
+            clearInterval(trivia.timer.intervalId);
 
+            trivia.gifs.correctGif();
+            $("#answers").empty();
             if (trivia.questionsAsked.length === trivia.questions.length) {
 
-                trivia.finished.printScore();
-                trivia.finished.resetButton();
+                clearInterval(trivia.timer.intervalId);
+
+                setTimeout(function () {
+                    trivia.gifs.removeGif();
+                    trivia.finished.printScore();
+                    trivia.finished.resetButton();
+
+                }, 2000);
                 return true;
             }
 
-            trivia.nextQuestion(trivia.randomQuestion());
+            setTimeout(function () {
+
+                trivia.gifs.removeGif();
+
+                $("#time").empty();
+                $("#question").empty();
+
+
+                trivia.nextQuestion(trivia.randomQuestion());
+                return true;
+
+            }, 2000);
 
 
         } else {
 
             trivia.score.incorrect++;
-            $("#time").empty();
-            $("#question").empty();
+            clearInterval(trivia.timer.intervalId);
             $("#answers").empty();
+            trivia.gifs.incorrectGif();
 
             if (trivia.questionsAsked.length === trivia.questions.length) {
 
-                trivia.finished.printScore();
-                trivia.finished.resetButton();
+                clearInterval(trivia.timer.intervalId);
+
+                setTimeout(function () {
+                    trivia.gifs.removeGif();
+                    trivia.finished.printScore();
+                    trivia.finished.resetButton();
+
+                }, 2000);
                 return true;
             }
 
-            trivia.nextQuestion(trivia.randomQuestion());
+            setTimeout(function () {
+
+                trivia.gifs.removeGif();
+
+                $("#time").empty();
+                $("#question").empty();
+
+
+                trivia.nextQuestion(trivia.randomQuestion());
+                return true;
+
+            }, 2000);
 
         }
 
     });
 
+    //On click function for reset button
     $(document).on("click", "#reset-button", function () {
 
         trivia.questionsAsked = [];
         trivia.score.correct = 0;
         trivia.score.incorrect = 0;
+        trivia.score.unanswered = 0;
 
         $(this).remove();
         $("#score").remove();
