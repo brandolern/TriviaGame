@@ -1,14 +1,23 @@
 $(document).ready(function () {
 
+    //Main object
     var trivia = {
 
-        questions: ["The sky is what color?", "Do you know the answer?", "Whats my favorite animal?", "What is 4x2?"],
+        //Questions array
+        questions: ["At the beginning of the series, how many children do Ned and Catelyn Stark have?", "How did Daenerys hatch her dragon eggs?", "What is the name of Arya's direwolf?",
+            "Besides dragonglass, what is the only other substance capable of defeating White Walkers?", "Arya's punishment for stealing from the Many-Face God is:",
+            "'Growing Strong' is the saying of which family house?", "Who shoots the flaming arrow that subsequently destroy's Stannis' fleet in Blackwater Bay?"
+        ],
 
+        //Answers array, 5th value is the correct answer
         answers: [
-            ["red", "blue", "green", "yellow", "blue"],
-            ["yes", "no", "maybe", "probably", "no"],
-            ["cat", "dog", "llama", "bear", "cat"],
-            ["2", "6", "1", "8", "8"]
+            ["3", "4", "5", "6", "5"],
+            ["In a lightning storm", "In a fireplace", "In a funeral pyre", "In the ocean", "In a funeral pyre"],
+            ["Grey WInd", "Wolfie", "Nymeria", "Ghost", "Ghost"],
+            ["Wildfire", "Valyrian Steel", "Weirwood", "Dragon Scales", "Valyrian Steel"],
+            ["Memory Loss", "Blindness", "Uncontrollable laughter", "Death", "Blindness"],
+            ["The Greyjoys", "The Baratheons", "The Starks", "The Tyrells", "The Tyrells"],
+            ["Bronn", "Jaime Lannister", "Tyrion Lannister", "King Joffrey", "Bronn"]
         ],
 
         currentQuestion: "",
@@ -42,10 +51,16 @@ $(document).ready(function () {
         timer: {
             counter: 10,
             intervalId: 0,
+            runTimer: function () {
+                clearInterval(trivia.timer.intervalId);
+                this.counter = 10;
+                $("#time").text(`Time Left: ${trivia.timer.counter} seconds`);
 
+                this.intervalId = setInterval(this.decrement, 1000);
+            },
             decrement: function () {
 
-                $("#time").text(trivia.timer.counter);
+                $("#time").text(`Time Left: ${trivia.timer.counter} seconds`);
                 trivia.timer.counter--;
 
                 if (trivia.timer.counter < 0) {
@@ -70,27 +85,14 @@ $(document).ready(function () {
                     setTimeout(function () {
 
                         trivia.gifs.removeGif();
-
                         $("#time").empty();
                         $("#question").empty();
-
 
                         trivia.nextQuestion(trivia.randomQuestion());
 
                     }, 4000);
-
-
-
                 }
-            },
-            runTimer: function () {
-                clearInterval(trivia.timer.intervalId);
-                this.counter = 10;
-                $("#time").text(trivia.timer.counter);
-
-                this.intervalId = setInterval(this.decrement, 1000);
-            },
-
+            }
         },
 
         gifs: {
@@ -216,6 +218,7 @@ $(document).ready(function () {
                     trivia.finished.resetButton();
 
                 }, 2000);
+
                 return true;
             }
 
@@ -228,6 +231,7 @@ $(document).ready(function () {
 
 
                 trivia.nextQuestion(trivia.randomQuestion());
+
                 return true;
 
             }, 2000);
@@ -249,7 +253,7 @@ $(document).ready(function () {
                     trivia.finished.printScore();
                     trivia.finished.resetButton();
 
-                }, 2000);
+                }, 2500);
                 return true;
             }
 
@@ -264,7 +268,7 @@ $(document).ready(function () {
                 trivia.nextQuestion(trivia.randomQuestion());
                 return true;
 
-            }, 2000);
+            }, 2500);
 
         }
 
