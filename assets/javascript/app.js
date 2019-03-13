@@ -6,7 +6,8 @@ $(document).ready(function () {
         //Questions array
         questions: ["At the beginning of the series, how many children do Ned and Catelyn Stark have?", "How did Daenerys hatch her dragon eggs?", "What is the name of Arya's direwolf?",
             "Besides dragonglass, what is the only other substance capable of defeating White Walkers?", "Arya's punishment for stealing from the Many-Face God is:",
-            "'Growing Strong' is the saying of which family house?", "Who shoots the flaming arrow that subsequently destroy's Stannis' fleet in Blackwater Bay?"
+            "'Growing Strong' is the saying of which family house?", "Who shoots the flaming arrow that subsequently destroy's Stannis' fleet in Blackwater Bay?",
+            "The Night King was created using a dagger made of what?", "Who is known as 'The-King-Beyond-the-Wall'?", "Which great house presides over The Vale?"
         ],
 
         //Answers array, 5th value is the correct answer
@@ -17,7 +18,10 @@ $(document).ready(function () {
             ["Wildfire", "Valyrian Steel", "Weirwood", "Dragon Scales", "Valyrian Steel"],
             ["Memory Loss", "Blindness", "Uncontrollable laughter", "Death", "Blindness"],
             ["The Greyjoys", "The Baratheons", "The Starks", "The Tyrells", "The Tyrells"],
-            ["Bronn", "Jaime Lannister", "Tyrion Lannister", "King Joffrey", "Bronn"]
+            ["Bronn", "Jaime Lannister", "Tyrion Lannister", "King Joffrey", "Bronn"],
+            ["Obsidian", "Blue Ice", "Dragonglass", "Valyrian Steel", "Dragonglass"],
+            ["Mance Rayder", "The Knight King", "Stannis Baratheon", "Tormund Giantsbane", "Mance Rayder"],
+            ["The Targaryens", "The Lannisters", "The Arryns", "The Tullys", "The Arryns"]
         ],
 
         currentQuestion: "",
@@ -49,11 +53,11 @@ $(document).ready(function () {
         },
 
         timer: {
-            counter: 25,
+            counter: 20,
             intervalId: 0,
             runTimer: function () {
                 clearInterval(trivia.timer.intervalId);
-                this.counter = 25;
+                this.counter = 20;
                 $("#time").text(`Time Left: ${trivia.timer.counter} seconds`);
 
                 this.intervalId = setInterval(this.decrement, 1000);
@@ -79,7 +83,7 @@ $(document).ready(function () {
                             trivia.finished.printScore();
                             trivia.finished.resetButton();
 
-                        }, 4000);
+                        }, 3000);
                         return true;
                     }
 
@@ -91,7 +95,7 @@ $(document).ready(function () {
 
                         trivia.nextQuestion(trivia.randomQuestion());
 
-                    }, 4000);
+                    }, 3000);
                 }
             }
         },
@@ -101,7 +105,7 @@ $(document).ready(function () {
 
                 var gif = $("<img>");
                 gif.addClass("gif");
-                gif.attr("src", "assets/images/giphy.gif");
+                gif.attr("src", "assets/images/correct.gif");
                 $(".gif").attr("alt", "That's correct!");
                 $("#gif").append(gif);
 
@@ -115,7 +119,7 @@ $(document).ready(function () {
 
                 var gif = $("<img>");
                 gif.addClass("gif");
-                gif.attr("src", "assets/images/giphy1.gif");
+                gif.attr("src", "assets/images/incorrect.gif");
                 $(".gif").attr("alt", "That's incorrect");
                 $("#gif").append(gif);
 
@@ -128,7 +132,7 @@ $(document).ready(function () {
             unansweredGif: function () {
                 var gif = $("<img>");
                 gif.addClass("gif");
-                gif.attr("src", "assets/images/giphy2.gif");
+                gif.attr("src", "assets/images/time.gif");
                 $(".gif").attr("alt", "You ran out of time");
                 $("#gif").append(gif);
 
@@ -154,7 +158,7 @@ $(document).ready(function () {
             this.timer.runTimer();
             this.currentQuestion = n;
 
-            $("#question").text(`${this.questionsAsked.length} . ${this.questions[n]}`);
+            $("#question").text(`${this.questionsAsked.length}. ${this.questions[n]}`);
 
             for (i = 0; i < 4; i++) {
 
@@ -218,7 +222,7 @@ $(document).ready(function () {
                     trivia.finished.printScore();
                     trivia.finished.resetButton();
 
-                }, 2000);
+                }, 4700);
 
                 return true;
             }
@@ -235,7 +239,7 @@ $(document).ready(function () {
 
                 return true;
 
-            }, 2000);
+            }, 4700);
 
 
         } else {
@@ -254,7 +258,7 @@ $(document).ready(function () {
                     trivia.finished.printScore();
                     trivia.finished.resetButton();
 
-                }, 2500);
+                }, 3000);
                 return true;
             }
 
@@ -269,7 +273,7 @@ $(document).ready(function () {
                 trivia.nextQuestion(trivia.randomQuestion());
                 return true;
 
-            }, 2500);
+            }, 3000);
 
         }
 
