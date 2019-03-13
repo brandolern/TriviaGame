@@ -49,15 +49,16 @@ $(document).ready(function () {
         },
 
         timer: {
-            counter: 10,
+            counter: 25,
             intervalId: 0,
             runTimer: function () {
                 clearInterval(trivia.timer.intervalId);
-                this.counter = 10;
+                this.counter = 25;
                 $("#time").text(`Time Left: ${trivia.timer.counter} seconds`);
 
                 this.intervalId = setInterval(this.decrement, 1000);
             },
+
             decrement: function () {
 
                 $("#time").text(`Time Left: ${trivia.timer.counter} seconds`);
